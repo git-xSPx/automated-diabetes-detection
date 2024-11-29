@@ -4,9 +4,11 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 from config import Config
+from flask_cors import CORS
 
 # Ініціалізація Flask-додатку
 app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes
 
 # Маршрут для передбачення
 @app.route('/predict', methods=['POST'])
@@ -27,7 +29,7 @@ def predict():
         # 3. Попередня обробка даних пацієнта
         label_encoders = {
             "gender": {"Female": 0, "Male": 1},
-            "smoking_history": {"No Info": 2, "never": 0, "former": 1, "current": 1, "not current": 1}
+            "smoking_history": {"no info": 2, "never": 0, "former": 1, "current": 1, "not current": 1}
         }
 
         # Перетворення вхідних даних
@@ -36,7 +38,7 @@ def predict():
             float(data["age"]),
             int(data["hypertension"]),
             int(data["heart_disease"]),
-            label_encoders["smoking_history"][data["smoking_history"]],
+            label_encoders["smoking_history"][data["smoking_history"].lower()],
             float(data["bmi"]),
             float(data["HbA1c_level"]),
             float(data["blood_glucose_level"])
@@ -66,8 +68,8 @@ def predict():
 
         # Формування відповіді
         result = {
-            "diabetes_prediction": int(diabetes_prediction),  # 0 або 1
-            "diabetes_probability": round(float(diabetes_probability), 2)
+            "diabetes_prediction": int(diabetes_prediction[0]),  # 0 або 1
+            "diabetes_probability": round(float(diabetes_probability[0]), 2)
         }
         return jsonify(result)
 
