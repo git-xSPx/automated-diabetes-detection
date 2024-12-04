@@ -1,0 +1,44 @@
+/* Typography */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f5f5f5;
+    color: #212121;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Headings */
+  .text-h5 {
+    font-size: 24px;
+    font-weight: 500;
+    margin-bottom: 16px;
+  }
+  
+  /* Cards */
+  .v-card {
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Buttons */
+  .v-btn {
+    text-transform: uppercase;
+    letter-spacing: 1.25px;
+  }
+  
+  /* Inputs */
+  .v-input {
+    margin-bottom: 16px;
+  }
+  
+  /* Error Messages */
+  .v-alert.error {
+    background-color: #fddede;
+    color: #b71c1c;
+  }
+  
+  /* Tooltips */
+  .v-tooltip {
+    font-size: 12px;
+  }
+ 
