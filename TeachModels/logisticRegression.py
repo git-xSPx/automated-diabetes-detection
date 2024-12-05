@@ -1,6 +1,7 @@
 # Імпортуємо необхідні бібліотеки
 import pandas as pd
 import numpy as np
+import os
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import LabelEncoder, StandardScaler
@@ -9,7 +10,7 @@ import matplotlib.pyplot as plt
 
 def makeLogisticRegression(Config):
     # 1. Завантаження даних
-    data = pd.read_csv(Config.TEACH_DIR + 'diabetes_prediction_dataset.csv')
+    data = pd.read_csv(os.path.join(Config.TEACH_DIR, 'diabetes_prediction_dataset.csv'))
 
     # 2. Попередня обробка даних
     # Перевірка на пропущені значення
@@ -73,8 +74,8 @@ def makeLogisticRegression(Config):
 
     # 7. Збереження моделі для подальшого використання
     from joblib import dump
-    dump(model, Config.MODELS_DIR + 'diabetes_logisticRegression_model.joblib')
+    dump(model, os.path.join(Config.MODELS_DIR, 'diabetes_logisticRegression_model.joblib'))
     print("\nМодель збережена у файлі 'diabetes_logisticRegression_model.joblib'.")
 
-    dump(scaler, Config.MODELS_DIR + 'diabetes_scaler.joblib')
+    dump(scaler, os.path.join(Config.MODELS_DIR, 'diabetes_scaler.joblib'))
     print("Скейлер збережено у файл 'diabetes_scaler.joblib'")

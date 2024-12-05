@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from joblib import load
+import os
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler
@@ -15,7 +16,7 @@ CORS(app)  # Enable CORS for all routes
 def predict():
     try:
         # 1. Завантаження моделі
-        model = load(Config.MODELS_DIR + 'diabetes_logisticRegression_model.joblib')
+        model = load(os.path.join(Config.MODELS_DIR, 'diabetes_logisticRegression_model.joblib'))
 
         # 2. Отримання даних із запиту
         data = request.json
@@ -55,7 +56,7 @@ def predict():
         new_patient_df = pd.DataFrame(new_patient_encoded, columns=feature_names)  # Використання форми (1, 8)
 
         # Завантаження скейлера
-        scaler = load(Config.MODELS_DIR + 'diabetes_scaler.joblib')
+        scaler = load(os.path.join(Config.MODELS_DIR, 'diabetes_scaler.joblib'))
 
         # Масштабування числових ознак
         new_patient_df.loc[:, ['age', 'bmi', 'HbA1c_level', 'blood_glucose_level']] = scaler.transform(
@@ -79,4 +80,5 @@ def predict():
 
 # Запуск Flask-додатку
 if __name__ == '__main__':
-    app.run(debug=True)
+    #app.run(debug=True)
+    app.run()
