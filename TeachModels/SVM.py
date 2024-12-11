@@ -3,26 +3,25 @@ import pandas as pd
 import numpy as np
 import os
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score, roc_curve
 import matplotlib.pyplot as plt
+from joblib import dump
 
-def makeLogisticRegression(Config):
+def makeSVM(Config):
     # 1. Завантаження даних
     data = pd.read_csv(os.path.join(Config.TEACH_DIR, 'diabetes_prediction_dataset.csv'))
 
     # 2. Попередня обробка даних
-    # Перевірка на пропущені значення
     print("Пропущені значення в кожній колонці:")
     print(data.isnull().sum())
 
     # Кодіфікація категоріальних даних
-    # df["smoking_history"].replace({"No Info" :2,"never":0,"ever":0,"former":1,"current":1,"not current":1 },inplace=True)
     categorical_columns = ['gender', 'smoking_history']
     label_encoders = {
         "gender": {"Female": 0, "Male": 1},
-        "smoking_history": {"No Info" :2,"never":0,"ever":0,"former":1,"current":1,"not current":1 }
+        "smoking_history": {"No Info": 2, "never": 0, "ever": 0, "former": 1, "current": 1, "not current": 1}
     }
 
     for col in categorical_columns:
@@ -42,13 +41,14 @@ def makeLogisticRegression(Config):
     # Розділення на тренувальні та тестові дані
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-    # 4. Навчання моделі Logistic Regression
-    model = LogisticRegression(random_state=42)
+    # 4. Навчання моделі SVM
+    # Використовуємо ядро RBF (радіальна базисна функція)
+    model = SVC(probability=True, kernel='rbf', C=1.0, random_state=42)
     model.fit(X_train, y_train)
 
     # 5. Оцінка моделі
-    y_pred = model.predict(X_test)
     y_proba = model.predict_proba(X_test)[:, 1]
+    y_pred = model.predict(X_test)
 
     print("\nКласифікаційний звіт:")
     print(classification_report(y_test, y_pred))
@@ -72,10 +72,9 @@ def makeLogisticRegression(Config):
     plt.grid()
     plt.show()
 
-    # 7. Збереження моделі для подальшого використання
-    from joblib import dump
-    dump(model, os.path.join(Config.MODELS_DIR, 'diabetes_logisticRegression_model.joblib'))
-    print("\nМодель збережена у файлі 'diabetes_logisticRegression_model.joblib'.")
+    # 7. Збереження моделі та скейлера
+    dump(model, os.path.join(Config.MODELS_DIR, 'diabetes_svm_model.joblib'))
+    print("\nМодель збережена у файлі 'diabetes_svm_model.joblib'.")
 
-    dump(scaler, os.path.join(Config.MODELS_DIR, 'diabetes_logisticRegression_scaler.joblib'))
-    print("Скейлер збережено у файл 'diabetes_logisticRegression_scaler.joblib'")
+    dump(scaler, os.path.join(Config.MODELS_DIR, 'diabetes_svm_scaler.joblib'))
+    print("Скейлер збережено у файл 'diabetes_svm_scaler.joblib'")
