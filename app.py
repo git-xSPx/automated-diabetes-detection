@@ -19,7 +19,7 @@ app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
 # Маршрут для передбачення
-@app.route('/predict', methods=['POST'])
+@app.route('/api/predict', methods=['POST'])
 def predict():
     try:
         # Отримання даних із запиту
