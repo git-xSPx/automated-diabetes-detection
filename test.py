@@ -3,6 +3,7 @@ import numpy as np
 from joblib import load
 from sklearn.preprocessing import StandardScaler
 from config import Config
+from gunicorn import *
 
 # 1. Завантаження моделі
 model = load(Config.MODELS_DIR + 'diabetes_logisticRegression_model.joblib')

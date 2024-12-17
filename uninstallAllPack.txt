@@ -1,0 +1,5 @@
+pip freeze > temp.txt && for /F "tokens=*" %i in (temp.txt) do pip uninstall -y %i
+del temp.txt
+
+pip install pipreqs
+pipreqs . --force
